@@ -99,4 +99,19 @@ public class VersementMapper extends Mapper {
       throw new RuntimeException(e);
     }
   }
+  public int countVersementsByAllocataire(long allocataireId) {
+    System.out.println("countVersementsByAllocataire() " + allocataireId);
+    Connection connection = activeJDBCConnection();
+    try {
+      PreparedStatement preparedStatement = connection.prepareStatement(
+              "SELECT COUNT(*) FROM VERSEMENTS WHERE FK_ALLOCATAIRES = ?"
+      );
+      preparedStatement.setLong(1, allocataireId);
+      ResultSet resultSet = preparedStatement.executeQuery();
+      resultSet.next();
+      return resultSet.getInt(1);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
