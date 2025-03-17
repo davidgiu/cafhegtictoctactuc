@@ -15,7 +15,7 @@ import java.util.List;
 
 public class AllocationMapper extends Mapper {
 
-  private static final Logger logger = LoggerFactory.getLogger(AllocataireMapper.class);
+  private static final Logger logger = LoggerFactory.getLogger(AllocationMapper.class);
 
   private static final String QUERY_FIND_ALL = "SELECT * FROM ALLOCATIONS";
 
@@ -30,7 +30,7 @@ public class AllocationMapper extends Mapper {
       ResultSet resultSet = preparedStatement.executeQuery();
       List<Allocation> allocations = new ArrayList<>();
       while (resultSet.next()) {
-        logger.debug("Resultset#next");
+        logger.trace("Resultset#next");
         allocations.add(
             new Allocation(new Montant(resultSet.getBigDecimal(2)),
                 Canton.fromValue(resultSet.getString(3)), resultSet.getDate(4).toLocalDate(),

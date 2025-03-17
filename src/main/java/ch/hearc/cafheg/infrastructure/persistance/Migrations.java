@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Migrations {
 
-  private static final Logger logger = LoggerFactory.getLogger(AllocataireMapper.class);
+  private static final Logger logger = LoggerFactory.getLogger(Migrations.class);
   private final Database database;
   private final boolean forTest;
 

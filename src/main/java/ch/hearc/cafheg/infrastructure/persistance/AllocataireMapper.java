@@ -35,15 +35,15 @@ public class AllocataireMapper extends Mapper {
             .prepareStatement(QUERY_FIND_WHERE_NOM_LIKE);
         preparedStatement.setString(1, likeNom + "%");
       }
-      logger.info("Allocation d'un nouveau tableau");
+      logger.debug("Allocation d'un nouveau tableau");
       List<Allocataire> allocataires = new ArrayList<>();
 
-      logger.info("Exécution de la requête");
+      logger.debug("Exécution de la requête");
       try (ResultSet resultSet = preparedStatement.executeQuery()) {
 
-        logger.info("Allocataire mapping");
+        logger.debug("Allocataire mapping");
         while (resultSet.next()) {
-          logger.info("Resultset#next");
+          logger.trace("Resultset#next");
           allocataires
               .add(new Allocataire(new NoAVS(resultSet.getString(3)), resultSet.getString(2),
                   resultSet.getString(1)));
@@ -65,7 +65,7 @@ public class AllocataireMapper extends Mapper {
       PreparedStatement preparedStatement = connection.prepareStatement(QUERY_FIND_WHERE_NUMERO);
       preparedStatement.setLong(1, id);
       ResultSet resultSet = preparedStatement.executeQuery();
-      logger.debug("ResultSet#next");
+      logger.trace("ResultSet#next");
       resultSet.next();
       logger.debug("Allocataire mapping");
       return new Allocataire(new NoAVS(resultSet.getString(1)),

@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import javax.sql.DataSource;
 
 public class Database {
-  private static final Logger logger = LoggerFactory.getLogger(AllocataireMapper.class);
+  private static final Logger logger = LoggerFactory.getLogger(Database.class);
 
   /** Pool de connections JDBC */
   private static DataSource dataSource;
@@ -39,9 +39,9 @@ public class Database {
    * @return Le résultat de l'éxécution de la fonction
    */
   public static <T> T inTransaction(Supplier<T> inTransaction) {
-    logger.info("inTransaction#start");
+    logger.debug("inTransaction#start");
     try {
-      logger.info("inTransaction#getConnection");
+      logger.debug("inTransaction#getConnection");
       connection.set(dataSource.getConnection());
       return inTransaction.get();
     } catch (Exception e) {
@@ -49,13 +49,13 @@ public class Database {
       throw new RuntimeException(e);
     } finally {
       try {
-        logger.info("inTransaction#closeConnection");
+        logger.debug("inTransaction#closeConnection");
         connection.get().close();
       } catch (SQLException e) {
         logger.error("Erreur lors de la fermeture de la connection", e);
         throw new RuntimeException(e);
       }
-      logger.info("inTransaction#end");
+      logger.debug("inTransaction#end");
       connection.remove();
     }
   }
