@@ -2,11 +2,14 @@ package ch.hearc.cafheg.business.allocations;
 
 import ch.hearc.cafheg.infrastructure.persistance.AllocataireMapper;
 import ch.hearc.cafheg.infrastructure.persistance.AllocationMapper;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class AllocationService {
+
+  private static final Logger logger = LoggerFactory.getLogger(AllocationService.class);
 
   private static final String PARENT_1 = "Parent1";
   private static final String PARENT_2 = "Parent2";
@@ -22,7 +25,7 @@ public class AllocationService {
   }
 
   public List<Allocataire> findAllAllocataires(String likeNom) {
-    System.out.println("Rechercher tous les allocataires");
+    logger.info("Rechercher tous les allocataires");
     return allocataireMapper.findAll(likeNom);
   }
 
