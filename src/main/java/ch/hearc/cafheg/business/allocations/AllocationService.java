@@ -31,15 +31,46 @@ public class AllocationService {
   }
 
   public String getParentDroitAllocation(ParentDroitAllocationRequest request) {
+    System.out.println("Déterminer quel parent a le droit aux allocations");
+
+    // Cas (a) - Un seul parent avec activité lucrative
     if (request.isParent1ActiviteLucrative() && !request.isParent2ActiviteLucrative()) {
       return PARENT_1;
     }
-
     if (request.isParent2ActiviteLucrative() && !request.isParent1ActiviteLucrative()) {
       return PARENT_2;
     }
 
-    return request.getParent1Salaire().compareTo(request.getParent2Salaire()) > 0 ? PARENT_1 : PARENT_2;
+    // Cas (b) - Un seul parent avec autorité parentale
+    if (request.isParent1AutoriteParentale() && !request.isParent2AutoriteParentale()) {
+      return PARENT_1;
+    }
+    if (request.isParent2AutoriteParentale() && !request.isParent1AutoriteParentale()) {
+      return PARENT_2;
+    }
+
+    // Cas (c) - Les parents sont séparés, l'enfant vit avec un parent
+    if (!request.isParentsEnsemble()) {
+      return request.getParent1Residence().equals(request.getEnfantResidence()) ? PARENT_1 : PARENT_2;
+    }
+
+    // Cas (d) - Un parent travaille dans le canton de domicile de l'enfant
+    if (!request.isParentsEnsemble()) {
+      if (request.getParent1Residence().equals(request.getEnfantResidence()) && request.isParent1ActiviteLucrative()) {
+        return PARENT_1;
+      }
+      if (request.getParent2Residence().equals(request.getEnfantResidence()) && request.isParent2ActiviteLucrative()) {
+        return PARENT_2;
+      }
+    }
+
+    // Cas (e) - Les deux parents sont salariés
+    if (!request.isParent1Independant() && !request.isParent2Independant()) {
+      return request.getParent1RevenuAVS().compareTo(request.getParent2RevenuAVS()) > 0 ? PARENT_1 : PARENT_2;
+    }
+
+    // Cas (f) - Les deux parents sont indépendants
+    return request.getParent1RevenuAVS().compareTo(request.getParent2RevenuAVS()) > 0 ? PARENT_1 : PARENT_2;
   }
 
 }
