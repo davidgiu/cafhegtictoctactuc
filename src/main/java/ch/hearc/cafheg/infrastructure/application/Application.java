@@ -14,11 +14,15 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = "ch.hearc.cafheg")
 public class Application extends SpringBootServletInitializer {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger("ch.hearc.cafheg");
+
   /**
    * Démarrage de l'application en mode standalone (java -jar ...)
    * @param args Arguments du programme
    */
   public static void main(String[] args) {
+    //logger.info("This is an INFO log, should create cafheg.log");
+    //logger.error("This is a log of ERROR, should create err.log");
     start();
     SpringApplication.run(Application.class, args);
   }
