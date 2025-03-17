@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@org.mapstruct.Mapper
 public class AllocataireMapper extends Mapper {
 
   private static final String QUERY_FIND_ALL = "SELECT NOM,PRENOM,NO_AVS FROM ALLOCATAIRES";
@@ -69,4 +70,33 @@ public class AllocataireMapper extends Mapper {
       throw new RuntimeException(e);
     }
   }
+  public void deleteById(long allocataireId) {
+    System.out.println("deleteById() " + allocataireId);
+    Connection connection = activeJDBCConnection();
+    try {
+      PreparedStatement preparedStatement = connection.prepareStatement(
+              "DELETE FROM ALLOCATAIRES WHERE NUMERO = ?"
+      );
+      preparedStatement.setLong(1, allocataireId);
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  public void updateAllocataire(Allocataire allocataire) {
+    System.out.println("updateAllocataire() " + allocataire.getNoAVS());
+    Connection connection = activeJDBCConnection();
+    try {
+      PreparedStatement preparedStatement = connection.prepareStatement(
+              "UPDATE ALLOCATAIRES SET NOM = ?, PRENOM = ? WHERE NO_AVS = ?"
+      );
+      preparedStatement.setString(1, allocataire.getNom());
+      preparedStatement.setString(2, allocataire.getPrenom());
+      preparedStatement.setString(3, allocataire.getNoAVS().getValue());
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
 }

@@ -2,10 +2,7 @@ package ch.hearc.cafheg.infrastructure.api;
 
 import static ch.hearc.cafheg.infrastructure.persistance.Database.inTransaction;
 
-import ch.hearc.cafheg.business.allocations.Allocataire;
-import ch.hearc.cafheg.business.allocations.Allocation;
-import ch.hearc.cafheg.business.allocations.AllocationService;
-import ch.hearc.cafheg.business.allocations.ParentDroitAllocationRequest;
+import ch.hearc.cafheg.business.allocations.*;
 import ch.hearc.cafheg.business.versements.VersementService;
 import ch.hearc.cafheg.infrastructure.pdf.PDFExporter;
 import ch.hearc.cafheg.infrastructure.persistance.AllocataireMapper;
@@ -14,6 +11,7 @@ import ch.hearc.cafheg.infrastructure.persistance.EnfantMapper;
 import ch.hearc.cafheg.infrastructure.persistance.VersementMapper;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -23,9 +21,11 @@ public class RESTController {
 
   private final AllocationService allocationService;
   private final VersementService versementService;
+  private final AllocataireService allocataireService;
 
   public RESTController() {
     this.allocationService = new AllocationService(new AllocataireMapper(), new AllocationMapper());
+    this.allocataireService = new AllocataireService(new AllocataireMapper(), new VersementMapper());
     this.versementService = new VersementService(new VersementMapper(), new AllocataireMapper(),
         new PDFExporter(new EnfantMapper()));
   }
@@ -79,5 +79,28 @@ public class RESTController {
   @GetMapping(value = "/allocataires/{allocataireId}/versements", produces = MediaType.APPLICATION_PDF_VALUE)
   public byte[] pdfVersements(@PathVariable("allocataireId") int allocataireId) {
     return inTransaction(() -> versementService.exportPDFVersements(allocataireId));
+  }
+
+  @DeleteMapping("DeleteAllocataire/{allocataireId}")
+  public ResponseEntity<String> supprimerAllocataire(@PathVariable Long allocataireId) {
+    return inTransaction(() -> {
+      try {
+        allocataireService.supprimerAllocataire(allocataireId);
+        return ResponseEntity.ok("Allocataire supprimé avec succès.");
+      } catch (RuntimeException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+      }
+    });
+  }
+  @PutMapping("ModifyAllocataire/{allocataireId}")
+  public ResponseEntity<?> modifierAllocataire(@PathVariable Long allocataireId, @RequestBody Allocataire request) {
+    return inTransaction(() -> {
+      try {
+        Allocataire updatedAllocataire = allocataireService.modifierAllocataire(allocataireId, request.getNom(), request.getPrenom());
+        return ResponseEntity.ok(updatedAllocataire);
+      } catch (RuntimeException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+      }
+    });
   }
 }
