@@ -77,7 +77,7 @@ public class AllocataireMapper extends Mapper {
     }
   }
   public void deleteById(long allocataireId) {
-    System.out.println("deleteById() " + allocataireId);
+    logger.info("deleteById() {}", allocataireId);
     Connection connection = activeJDBCConnection();
     try {
       PreparedStatement preparedStatement = connection.prepareStatement(
@@ -86,11 +86,12 @@ public class AllocataireMapper extends Mapper {
       preparedStatement.setLong(1, allocataireId);
       preparedStatement.executeUpdate();
     } catch (SQLException e) {
+      logger.error("Erreur lors de la suppression de l'allocataire par son id {}", allocataireId + e.getMessage());
       throw new RuntimeException(e);
     }
   }
   public void updateAllocataire(Allocataire allocataire) {
-    System.out.println("updateAllocataire() " + allocataire.getNoAVS());
+    logger.info("updateAllocataire() {}", allocataire.getNoAVS());
     Connection connection = activeJDBCConnection();
     try {
       PreparedStatement preparedStatement = connection.prepareStatement(
@@ -101,6 +102,7 @@ public class AllocataireMapper extends Mapper {
       preparedStatement.setString(3, allocataire.getNoAVS().getValue());
       preparedStatement.executeUpdate();
     } catch (SQLException e) {
+        logger.error("Erreur lors de la mise à jour de l'allocataire {}", allocataire.getNoAVS() + e.getMessage());
       throw new RuntimeException(e);
     }
   }

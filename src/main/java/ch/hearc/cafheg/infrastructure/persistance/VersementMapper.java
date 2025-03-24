@@ -108,7 +108,7 @@ public class VersementMapper extends Mapper {
     }
   }
   public int countVersementsByAllocataire(long allocataireId) {
-    System.out.println("countVersementsByAllocataire() " + allocataireId);
+    logger.info("countVersementsByAllocataire() {}", allocataireId);
     Connection connection = activeJDBCConnection();
     try {
       PreparedStatement preparedStatement = connection.prepareStatement(
@@ -119,6 +119,7 @@ public class VersementMapper extends Mapper {
       resultSet.next();
       return resultSet.getInt(1);
     } catch (SQLException e) {
+        logger.error("Erreur lors du comptage des versements par allocataire", e);
       throw new RuntimeException(e);
     }
   }
