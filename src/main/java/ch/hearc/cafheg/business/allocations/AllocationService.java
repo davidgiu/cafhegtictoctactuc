@@ -34,7 +34,7 @@ public class AllocationService {
   }
 
   public String getParentDroitAllocation(ParentDroitAllocationRequest request) {
-    System.out.println("Déterminer quel parent a le droit aux allocations");
+    logger.info("Déterminer quel parent a le droit aux allocations");
 
     // Cas (a) - Un seul parent avec activité lucrative
     if (request.isParent1ActiviteLucrative() && !request.isParent2ActiviteLucrative()) {
