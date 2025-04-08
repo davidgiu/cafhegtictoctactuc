@@ -40,7 +40,7 @@ public class AllocataireIT {
             RunScript.execute(
                     connection,
                     new InputStreamReader(
-                            getClass().getClassLoader().getResourceAsStream("db/ddl/V1__ddl.sql"),
+                            getClass().getClassLoader().getResourceAsStream("schema.sql"),
                             StandardCharsets.UTF_8
                     )
             );
