@@ -4,11 +4,15 @@ import ch.hearc.cafheg.business.allocations.*;
 import ch.hearc.cafheg.business.versements.*;
 import ch.hearc.cafheg.infrastructure.persistance.*;
 import ch.hearc.cafheg.infrastructure.persistance.AllocataireMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 public class AllocataireService {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(AllocataireMapper.class);
     private final AllocataireMapper allocataireMapper;
     private final VersementMapper versementMapper;
 
@@ -21,24 +25,27 @@ public class AllocataireService {
         // Vérifier si l'allocataire existe
         Allocataire allocataire = allocataireMapper.findById(allocataireId);
         if (allocataire == null) {
+            logger.error("Allocataire non trouvé avec l'ID : {}", allocataireId);
             throw new RuntimeException("Allocataire non trouvé avec l'ID : " + allocataireId);
         }
 
         // Vérifier s'il existe des versements associés
         int countVersements = versementMapper.countVersementsByAllocataire(allocataireId);
         if (countVersements > 0) {
+            logger.error("Impossible de supprimer l'allocataire car il possède des versements.");
             throw new RuntimeException("Impossible de supprimer l'allocataire car il possède des versements.");
         }
 
         // Supprimer l'allocataire
         allocataireMapper.deleteById(allocataireId);
-        System.out.println("Allocataire supprimé avec succès.");
+        logger.info("Allocataire supprimé avec succès.");
     }
 
     public Allocataire modifierAllocataire(Long allocataireId, String nouveauNom, String nouveauPrenom) {
         // Vérifier si l'allocataire existe
         Allocataire allocataire = allocataireMapper.findById(allocataireId);
         if (allocataire == null) {
+            logger.error("Allocataire non trouvé avec l'ID : {}", allocataireId);
             throw new RuntimeException("Allocataire non trouvé avec l'ID : " + allocataireId);
         }
 
@@ -57,11 +64,11 @@ public class AllocataireService {
 
         // Si aucune modification n'a été apportée, lever une exception
         if (!isModified) {
+            logger.error("Aucune modification détectée. Le nom et le prénom sont identiques.");
             throw new RuntimeException("Aucune modification détectée. Le nom et le prénom sont identiques.");
         }
 
-        System.out.println("Mise à jour de l'allocataire avec ID : " + allocataireId +
-                " Nouveau nom : " + nouveauNom + " Nouveau prénom : " + nouveauPrenom + "No AVS " + allocataire.getNoAVS());
+        logger.info("Mise à jour de l'allocataire avec ID : {} Nouveau nom : {} Nouveau prénom : {}", allocataireId, nouveauNom, nouveauPrenom);
         // Mettre à jour l'allocataire dans la base de données
         allocataireMapper.updateAllocataire(allocataire);
 
