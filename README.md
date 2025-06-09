@@ -1,7 +1,7 @@
 # Rapport
 # CAFHEG Project
 
-Projet développé dans le cadre du cours sur les tests unitaires, d'intégration et le développement orienté service.
+Projet développé dans le cadre du cours 25_HEG-ARC_62-61.2 Pratiques de développement PT
 
 ## Exercice 1 – Analyse & refactoring
 
